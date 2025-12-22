@@ -57,9 +57,10 @@
   "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
   import { 
-    getFirestore, addDoc, collection 
-  } from 
-  "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  getFirestore, addDoc, collection, getDocs 
+} from 
+"https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
 
   // 🔥 Firebase Config
   const firebaseConfig = {
@@ -97,6 +98,7 @@ const lostSnapshot = await getDocs(collection(db, "lostItems"));
 
 lostSnapshot.forEach(doc => {
   const lost = doc.data();
+  console.log("Checking against lost item:", lost);
 
   if (
     lost.itemName.toLowerCase() === itemName.value.toLowerCase() &&
@@ -107,6 +109,7 @@ lostSnapshot.forEach(doc => {
 });
 
 
+
     alert("Found item submitted successfully!");
     document.getElementById("foundForm").reset();
   });
@@ -115,6 +118,7 @@ lostSnapshot.forEach(doc => {
 
 </body>
 </html>
+
 
 
 
