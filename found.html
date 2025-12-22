@@ -92,6 +92,21 @@
       timestamp: new Date()
     });
 
+    // 🔍 MATCHING LOGIC (Lost vs Found)
+const lostSnapshot = await getDocs(collection(db, "lostItems"));
+
+lostSnapshot.forEach(doc => {
+  const lost = doc.data();
+
+  if (
+    lost.itemName.toLowerCase() === itemName.value.toLowerCase() &&
+    lost.location.toLowerCase() === foundLocation.value.toLowerCase()
+  ) {
+    alert("⚠️ Possible match found for a lost item!");
+  }
+});
+
+
     alert("Found item submitted successfully!");
     document.getElementById("foundForm").reset();
   });
@@ -100,6 +115,7 @@
 
 </body>
 </html>
+
 
 
 
