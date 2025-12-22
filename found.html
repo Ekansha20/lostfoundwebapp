@@ -4,7 +4,7 @@
   <title>Report Found Item</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- EMAILJS LIBRARY -->
+  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
@@ -26,10 +26,10 @@
 
 <label>Identity Type</label>
 <select id="userType" required>
-<option>Student</option>
-<option>Professor</option>
-<option>Guard</option>
-<option>Other Staff</option>
+  <option>Student</option>
+  <option>Professor</option>
+  <option>Guard</option>
+  <option>Other Staff</option>
 </select>
 
 <label>Item Name</label>
@@ -50,105 +50,91 @@
 <label>Phone</label>
 <input id="phone" required>
 
-<label>Upload Image</label>
-<input type="file" id="imageUpload" accept="image/*">
-
 <button type="submit">Submit Found Item</button>
-
 </form>
 
 <script type="module">
 
-import { initializeApp } from 
+import { initializeApp } from
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
-import { 
-  getFirestore, addDoc, collection, getDocs 
-} from 
+import {
+  getFirestore, addDoc, collection, getDocs
+} from
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-import {
-  getStorage, ref, uploadBytes, getDownloadURL
-} from
-"https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
-/* FIREBASE CONFIG */
+/* Firebase */
 const firebaseConfig = {
  apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
  authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
- projectId: "lost-found-webapp-a15c7",
- storageBucket: "lost-found-webapp-a15c7.appspot.com",
- messagingSenderId: "469222534302",
- appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
+ projectId: "lost-found-webapp-a15c7"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-/* EMAILJS INIT */
+/* EmailJS init */
 emailjs.init("rW6rp5HvtOEVxeari");
 
-document.getElementById("foundForm")
-.addEventListener("submit", async (e) => {
+/* Submit handler */
+foundForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
- e.preventDefault();
+  /* 1️⃣ Save found item */
+  const foundDoc = await addDoc(collection(db, "foundItems"), {
+    personName: personName.value,
+    userType: userType.value,
+    itemName: itemName.value.trim(),
+    foundDate: date.value,
+    location: foundLocation.value.trim(),
+    description: description.value,
+    email: email.value,
+    phone: phone.value,
+    imageURL: "",
+    timestamp: new Date()
+  });
 
- let imageURL = "";
+  /* 2️⃣ Match against lost items */
+  const lostSnap = await getDocs(collection(db, "lostItems"));
 
- const file = imageUpload.files[0];
- if (file) {
-   const storageRef = ref(storage, "foundImages/" + file.name);
-   await uploadBytes(storageRef, file);
-   imageURL = await getDownloadURL(storageRef);
- }
+  lostSnap.forEach(doc => {
+    const lost = doc.data();
 
- /* SAVE FOUND ITEM */
- const foundDoc = await addDoc(collection(db, "foundItems"), {
-   personName: personName.value,
-   userType: userType.value,
-   itemName: itemName.value.trim(),
-   foundDate: date.value,
-   location: foundLocation.value.trim(),
-   description: description.value,
-   email: email.value,
-   phone: phone.value,
-   imageURL: imageURL,
-   timestamp: new Date()
- });
+    if (
+      lost.itemName &&
+      lost.location &&
+      lost.itemName.trim().toLowerCase() === itemName.value.trim().toLowerCase() &&
+      lost.location.trim().toLowerCase() === foundLocation.value.trim().toLowerCase()
+    ) {
 
- /* MATCH LOST ITEMS */
- const lostSnap = await getDocs(collection(db, "lostItems"));
+      const confirmURL =
+      `https://Ekansha20.github.io/lostfoundwebapp/confirm.html?lost=${doc.id}&found=${foundDoc.id}`;
 
- lostSnap.forEach(doc => {
-   const lost = doc.data();
+      /* 3️⃣ Send email (NON-BLOCKING) */
+      try {
+        emailjs.send("service_id", "template_id", {
+          to_email: lost.email,
+          lost_item: lost.itemName,
+          lost_location: lost.location,
+          found_person: personName.value,
+          found_type: userType.value,
+          confirm_link: confirmURL
+        });
+      } catch (err) {
+        console.warn("Email failed, but match detected", err);
+      }
+    }
+  });
 
-   if (
-     lost.itemName.trim().toLowerCase() === itemName.value.trim().toLowerCase() &&
-     lost.location.trim().toLowerCase() === foundLocation.value.trim().toLowerCase()
-   ) {
-
-     const confirmURL =
-     `https://Ekansha20.github.io/lostfoundwebapp/confirm.html?lost=${doc.id}&found=${foundDoc.id}`;
-
-     emailjs.send("service_id", "template_id", {
-       to_email: lost.email,
-       lost_item: lost.itemName,
-       lost_location: lost.location,
-       found_person: personName.value,
-       found_type: userType.value,
-       confirm_link: confirmURL
-     });
-   }
- });
-
- alert("Found item submitted successfully!");
- foundForm.reset();
+  alert("Found item submitted successfully!");
+  foundForm.reset();
 });
 </script>
 
 </body>
 </html>
+
+
 
 
 
