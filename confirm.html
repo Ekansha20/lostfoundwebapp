@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<h1 id="statusText">Processing...</h1>
+<h1 id="statusText">Processing confirmation...</h1>
 
 <script type="module">
 
@@ -24,6 +24,7 @@ import {
 } from 
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
   authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
@@ -38,36 +39,44 @@ const db = getFirestore(app);
 
 async function processConfirmation() {
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const docId = urlParams.get("id");
+  const params = new URLSearchParams(window.location.search);
+  const lostId = params.get("lost");
+  const foundId = params.get("found");
 
-  if (!docId) {
-    document.getElementById("statusText").innerText = 
-    "Invalid confirmation link";
+  if (!lostId || !foundId) {
+    document.getElementById("statusText").innerText =
+      "Invalid or expired confirmation link.";
     return;
   }
 
-  const lostRef = doc(db, "lostItems", docId);
-  const lostSnap = await getDoc(lostRef);
+  const lostRef = doc(db, "lostItems", lostId);
+  const foundRef = doc(db, "foundItems", foundId);
 
-  if (!lostSnap.exists()) {
-    document.getElementById("statusText").innerText = 
-    "Item already confirmed!";
+  const lostSnap = await getDoc(lostRef);
+  const foundSnap = await getDoc(foundRef);
+
+  if (!lostSnap.exists() || !foundSnap.exists()) {
+    document.getElementById("statusText").innerText =
+      "This item has already been confirmed.";
     return;
   }
 
   const lostData = lostSnap.data();
+  const foundData = foundSnap.data();
 
+  // Move to history
   await addDoc(collection(db, "historyItems"), {
-    ...lostData,
-    resolvedDate: new Date()
+    lost: lostData,
+    found: foundData,
+    resolvedAt: new Date()
   });
 
+  // Delete from active lists
   await deleteDoc(lostRef);
+  await deleteDoc(foundRef);
 
-  document.getElementById("statusText").innerText = 
-    "Your confirmation has been recorded successfully.";
-
+  document.getElementById("statusText").innerText =
+    "✅ Your confirmation has been recorded successfully. The item has been resolved.";
 }
 
 processConfirmation();
@@ -76,3 +85,4 @@ processConfirmation();
 
 </body>
 </html>
+
