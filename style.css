@@ -1,0 +1,147 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== Body ===== */
+body {
+  background: linear-gradient(135deg, #e0f7fa, #ffffff); /* soft teal to white */
+  color: #333;
+  padding: 20px;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ===== Header ===== */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #00796b; /* dark teal */
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Navigation ===== */
+nav a {
+  text-decoration: none;
+  color: #00796b;
+  margin: 0 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  color: #004d40; /* darker teal hover */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Form Container ===== */
+form {
+  background-color: #ffffff;
+  padding: 25px;
+  max-width: 500px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+form:hover {
+  transform: translateY(-3px);
+}
+
+/* ===== Form Elements ===== */
+form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #00796b;
+}
+
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #004d40;
+  box-shadow: 0 0 5px #004d40;
+  outline: none;
+}
+
+/* ===== Buttons ===== */
+form button {
+  background-color: #00796b;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+form button:hover {
+  background-color: #004d40;
+  transform: scale(1.05);
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  transition: background 0.3s ease;
+}
+
+th {
+  background-color: #00796b;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+tr:hover {
+  background-color: #b2dfdb; /* soft teal highlight */
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  form, table {
+    width: 95%;
+    margin: 10px auto;
+  }
+
+  nav a {
+    display: block;
+    margin: 8px 0;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+}

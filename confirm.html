@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmation Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h1 id="statusText">Processing...</h1>
+
+<script type="module">
+
+import { initializeApp } from 
+"https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+
+import { 
+  getFirestore, doc, getDoc, deleteDoc, collection, addDoc 
+} from 
+"https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
+  authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
+  projectId: "lost-found-webapp-a15c7",
+  storageBucket: "lost-found-webapp-a15c7.appspot.com",
+  messagingSenderId: "469222534302",
+  appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function processConfirmation() {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const docId = urlParams.get("id");
+
+  if (!docId) {
+    document.getElementById("statusText").innerText = 
+    "Invalid confirmation link";
+    return;
+  }
+
+  const lostRef = doc(db, "lostItems", docId);
+  const lostSnap = await getDoc(lostRef);
+
+  if (!lostSnap.exists()) {
+    document.getElementById("statusText").innerText = 
+    "Item already confirmed!";
+    return;
+  }
+
+  const lostData = lostSnap.data();
+
+  await addDoc(collection(db, "historyItems"), {
+    ...lostData,
+    resolvedDate: new Date()
+  });
+
+  await deleteDoc(lostRef);
+
+  document.getElementById("statusText").innerText = 
+    "Your confirmation has been recorded successfully.";
+
+}
+
+processConfirmation();
+
+</script>
+
+</body>
+</html>
