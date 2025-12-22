@@ -10,51 +10,50 @@
 <body>
 
 <header>
-<h1>Report Found Item</h1>
-<nav>
- <a href="index.html">Home</a> |
- <a href="lost.html">Report Lost</a> |
- <a href="found.html">Report Found</a> |
- <a href="items.html">View Items</a>
-</nav>
+  <h1>Report Found Item</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="lost.html">Report Lost</a> |
+    <a href="found.html">Report Found</a> |
+    <a href="items.html">View Items</a>
+  </nav>
 </header>
 
 <form id="foundForm">
 
-<label>Your Name</label>
-<input id="personName" required>
+  <label>Your Name</label>
+  <input id="personName" required>
 
-<label>Identity Type</label>
-<select id="userType" required>
-  <option>Student</option>
-  <option>Professor</option>
-  <option>Guard</option>
-  <option>Other Staff</option>
-</select>
+  <label>Identity Type</label>
+  <select id="userType" required>
+    <option>Student</option>
+    <option>Professor</option>
+    <option>Guard</option>
+    <option>Other Staff</option>
+  </select>
 
-<label>Item Name</label>
-<input id="itemName" required>
+  <label>Item Name</label>
+  <input id="itemName" required>
 
-<label>Date Found</label>
-<input id="date" type="date" required>
+  <label>Date Found</label>
+  <input id="date" type="date" required>
 
-<label>Location</label>
-<input id="foundLocation" required>
+  <label>Location</label>
+  <input id="foundLocation" required>
 
-<label>Description</label>
-<textarea id="description"></textarea>
+  <label>Description</label>
+  <textarea id="description"></textarea>
 
-<label>Email</label>
-<input id="email" type="email" required>
+  <label>Email</label>
+  <input id="email" type="email" required>
 
-<label>Phone</label>
-<input id="phone" required>
+  <label>Phone</label>
+  <input id="phone" required>
 
-<button type="submit">Submit Found Item</button>
+  <button type="submit">Submit Found Item</button>
 </form>
 
 <script type="module">
-
 import { initializeApp } from
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
@@ -63,24 +62,35 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/* Firebase */
+/* 🔥 Firebase Config */
 const firebaseConfig = {
- apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
- authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
- projectId: "lost-found-webapp-a15c7"
+  apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
+  authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
+  projectId: "lost-found-webapp-a15c7"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* EmailJS init */
+/* 📧 EmailJS Init */
 emailjs.init("rW6rp5HvtOEVxeari");
 
-/* Submit handler */
+/* ✅ EXPLICIT DOM REFERENCES (CRITICAL FIX) */
+const foundForm = document.getElementById("foundForm");
+const personName = document.getElementById("personName");
+const userType = document.getElementById("userType");
+const itemName = document.getElementById("itemName");
+const date = document.getElementById("date");
+const foundLocation = document.getElementById("foundLocation");
+const description = document.getElementById("description");
+const email = document.getElementById("email");
+const phone = document.getElementById("phone");
+
+/* 🚀 Submit Handler */
 foundForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  /* 1️⃣ Save found item */
+  /* 1️⃣ Save Found Item */
   const foundDoc = await addDoc(collection(db, "foundItems"), {
     personName: personName.value,
     userType: userType.value,
@@ -94,7 +104,7 @@ foundForm.addEventListener("submit", async (e) => {
     timestamp: new Date()
   });
 
-  /* 2️⃣ Match against lost items */
+  /* 2️⃣ Match Against Lost Items */
   const lostSnap = await getDocs(collection(db, "lostItems"));
 
   lostSnap.forEach(doc => {
@@ -108,24 +118,21 @@ foundForm.addEventListener("submit", async (e) => {
     ) {
 
       const confirmURL =
-      `https://Ekansha20.github.io/lostfoundwebapp/confirm.html?lost=${doc.id}&found=${foundDoc.id}`;
+        `https://Ekansha20.github.io/lostfoundwebapp/confirm.html?lost=${doc.id}&found=${foundDoc.id}`;
 
-      /* 3️⃣ Send email (NON-BLOCKING) */
-      
-        emailjs.send("service_rx61zjm", "template_1ue28xr", {
+      /* 3️⃣ Send Email */
+      emailjs.send("service_rx61zjm", "template_1ue28xr", {
         to_email: lost.email,
         lost_item: lost.itemName,
         lost_location: lost.location,
-  found_person: personName.value,
-  found_type: userType.value,
-  confirm_link: confirmURL
-})
-.then(() => {
-  console.log("Email sent successfully");
-})
-.catch(err => {
-  console.error("Email failed:", err);
-});
+        found_person: personName.value,
+        found_type: userType.value,
+        confirm_link: confirmURL
+      })
+      .then(() => console.log("Email sent successfully"))
+      .catch(err => console.error("Email failed:", err));
+    }
+  });
 
   alert("Found item submitted successfully!");
   foundForm.reset();
@@ -134,6 +141,8 @@ foundForm.addEventListener("submit", async (e) => {
 
 </body>
 </html>
+
+
 
 
 
