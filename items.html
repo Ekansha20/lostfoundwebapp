@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>View Items</title>
-  <link rel="stylesheet" href="style.css">
+<title>View Items</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <h1>All Items</h1>
-  <nav>
-    <a href="index.html">Home</a> |
-    <a href="lost.html">Report Lost</a> |
-    <a href="found.html">Report Found</a> |
-    <a href="items.html">View Items</a>
-  </nav>
+<h1>All Items</h1>
+<nav>
+ <a href="index.html">Home</a> |
+ <a href="lost.html">Report Lost</a> |
+ <a href="found.html">Report Found</a> |
+ <a href="items.html">View Items</a>
+</nav>
 </header>
 
 <h2>Lost Items</h2>
 <table id="lostTable">
-  <tr>
-    <th>Item Name</th>
-    <th>Date Lost</th>
-    <th>Location</th>
-    <th>Description</th>
-    <th>Contact</th>
-    <th>Identity</th>
-  </tr>
+<tr>
+<th>Name</th>
+<th>Date</th>
+<th>Location</th>
+<th>Description</th>
+<th>Contact</th>
+<th>Identity</th>
+<th>Image</th>
+</tr>
 </table>
 
 <h2>Found Items</h2>
 <table id="foundTable">
-  <tr>
-    <th>Item Name</th>
-    <th>Date Found</th>
-    <th>Location</th>
-    <th>Description</th>
-    <th>Contact</th>
-    <th>Identity</th>
-  </tr>
+<tr>
+<th>Name</th>
+<th>Date</th>
+<th>Location</th>
+<th>Description</th>
+<th>Contact</th>
+<th>Identity</th>
+<th>Image</th>
+</tr>
 </table>
 
 <script type="module">
@@ -46,70 +48,72 @@ import { initializeApp } from
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
 import { 
-  getFirestore, getDocs, collection, query, orderBy 
+ getFirestore, getDocs, collection, query, orderBy 
 } from 
 "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
-  authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
-  projectId: "lost-found-webapp-a15c7",
-  storageBucket: "lost-found-webapp-a15c7.appspot.com",
-  messagingSenderId: "469222534302",
-  appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
+ apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
+ authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
+ projectId: "lost-found-webapp-a15c7",
+ storageBucket: "lost-found-webapp-a15c7.appspot.com",
+ messagingSenderId: "469222534302",
+ appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ===== LOST ITEMS ===== */
-const lostQ = query(
-  collection(db, "lostItems"),
-  orderBy("timestamp", "desc")
-);
+/*** LOST ITEMS ***/
+const lostQ = query(collection(db,"lostItems"),
+orderBy("timestamp","desc"));
 
 const lostSnap = await getDocs(lostQ);
 
-lostSnap.forEach(doc => {
-  const d = doc.data();
-  document.getElementById("lostTable").innerHTML += `
-    <tr>
-      <td>${d.itemName}</td>
-      <td>${d.lostDate}</td>
-      <td>${d.location}</td>
-      <td>${d.description}</td>
-      <td>${d.email}</td>
-      <td>${d.userType}</td>
-    </tr>
-  `;
+lostSnap.forEach(doc=>{
+const d = doc.data();
+
+document.getElementById("lostTable").innerHTML += `
+<tr>
+<td>${d.itemName}</td>
+<td>${d.lostDate}</td>
+<td>${d.location}</td>
+<td>${d.description}</td>
+<td>${d.email}</td>
+<td>${d.userType}</td>
+<td><img src="${d.imageURL}" height="60"></td>
+</tr>
+`;
 });
 
-/* ===== FOUND ITEMS ===== */
-const foundQ = query(
-  collection(db, "foundItems"),
-  orderBy("timestamp", "desc")
-);
+
+/*** FOUND ITEMS ***/
+const foundQ = query(collection(db,"foundItems"),
+orderBy("timestamp","desc"));
 
 const foundSnap = await getDocs(foundQ);
 
-foundSnap.forEach(doc => {
-  const d = doc.data();
-  document.getElementById("foundTable").innerHTML += `
-    <tr>
-      <td>${d.itemName}</td>
-      <td>${d.foundDate}</td>
-      <td>${d.location}</td>
-      <td>${d.description}</td>
-      <td>${d.email}</td>
-      <td>${d.userType}</td>
-    </tr>
-  `;
+foundSnap.forEach(doc=>{
+const d = doc.data();
+
+document.getElementById("foundTable").innerHTML += `
+<tr>
+<td>${d.itemName}</td>
+<td>${d.foundDate}</td>
+<td>${d.location}</td>
+<td>${d.description}</td>
+<td>${d.email}</td>
+<td>${d.userType}</td>
+<td><img src="${d.imageURL}" height="60"></td>
+</tr>
+`;
 });
 
 </script>
 
 </body>
 </html>
+
 
 
 
