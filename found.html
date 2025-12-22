@@ -7,153 +7,101 @@
 <body>
 
 <header>
-<h1>Report Found Item</h1>
-<nav>
- <a href="index.html">Home</a> |
- <a href="lost.html">Report Lost</a> |
- <a href="found.html">Report Found</a> |
- <a href="items.html">View Items</a>
-</nav>
+  <h1>Report Found Item</h1>
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="lost.html">Report Lost</a> |
+    <a href="found.html">Report Found</a> |
+    <a href="items.html">View Items</a>
+  </nav>
 </header>
 
 <form id="foundForm">
 
-<label>Your Name</label>
-<input id="personName" required>
+  <label>Your Name</label>
+  <input id="personName" required>
 
-<label>Identity Type</label>
-<select id="userType" required>
-<option>Student</option>
-<option>Professor</option>
-<option>Guard</option>
-<option>Other Staff</option>
-</select>
+  <label>Identity Type</label>
+  <select id="userType" required>
+    <option>Student</option>
+    <option>Professor</option>
+    <option>Guard</option>
+    <option>Other Staff</option>
+  </select>
 
-<label>Item Name</label>
-<input id="itemName" required>
+  <label>Item Name</label>
+  <input id="itemName" required>
 
-<label>Date Found</label>
-<input id="date" type="date" required>
+  <label>Date Found</label>
+  <input id="date" type="date" required>
 
-<label>Location</label>
-<input id="foundLocation" required>
+  <label>Location</label>
+  <input id="foundLocation" required>
 
-<label>Description</label>
-<textarea id="description"></textarea>
+  <label>Description</label>
+  <textarea id="description"></textarea>
 
-<label>Email</label>
-<input id="email" type="email" required>
+  <label>Email</label>
+  <input id="email" type="email" required>
 
-<label>Phone</label>
-<input id="phone" required>
+  <label>Phone</label>
+  <input id="phone" required>
 
-<label>Upload Image</label>
-<input type="file" id="imageUpload" accept="image/*">
-
-<button type="submit">Submit Found Item</button>
+  <button type="submit">Submit Found Item</button>
 
 </form>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <script type="module">
 
-import { initializeApp } from 
-"https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { initializeApp } from 
+  "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
-import { 
-  getFirestore, addDoc, collection, getDocs 
-} from 
-"https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { 
+    getFirestore, addDoc, collection 
+  } from 
+  "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-import {
-  getStorage, ref, uploadBytes, getDownloadURL
-} from
-"https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+  // 🔥 Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
+    authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
+    projectId: "lost-found-webapp-a15c7",
+    storageBucket: "lost-found-webapp-a15c7.appspot.com",
+    messagingSenderId: "469222534302",
+    appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
+  };
 
-const firebaseConfig = {
- apiKey: "AIzaSyCosGGqYQR8_q3lGGtUkSaIKIB4nKb6I9k",
- authDomain: "lost-found-webapp-a15c7.firebaseapp.com",
- projectId: "lost-found-webapp-a15c7",
- storageBucket: "lost-found-webapp-a15c7.appspot.com",
- messagingSenderId: "469222534302",
- appId: "1:469222534302:web:fc8cddaa0b0e5143459f8f"
-};
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+  // ✅ Submit handler
+  document.getElementById("foundForm")
+  .addEventListener("submit", async (e) => {
 
-/******** EMAILJS CONFIG *********/
+    e.preventDefault();
 
-(function(){
- emailjs.init("rW6rp5HvtOEVxeari");
-})();
+    await addDoc(collection(db, "foundItems"), {
+      personName: personName.value,
+      userType: userType.value,
+      itemName: itemName.value,
+      foundDate: date.value,
+      location: foundLocation.value,
+      description: description.value,
+      email: email.value,
+      phone: phone.value,
+      timestamp: new Date()
+    });
 
-document.getElementById("foundForm")
-.addEventListener("submit", async(e)=>{
-
- e.preventDefault();
-
- let imageURL = "";
-
- const file = document.getElementById("imageUpload").files[0];
-
- if(file){
-   const storageRef = ref(storage, "foundImages/" + file.name);
-   await uploadBytes(storageRef, file);
-   imageURL = await getDownloadURL(storageRef);
- }
-
-/*** save found item ***/
-await addDoc(collection(db, "foundItems"), {
- personName: personName.value,
- userType: userType.value,
- itemName: itemName.value,
- foundDate: date.value,
- location: foundLocation.value,
- description: description.value,
- email: email.value,
- phone: phone.value,
- imageURL: imageURL,
- timestamp: new Date()
-});
-
-/*** MATCH LOST ITEMS ***/
-const lostSnap = await getDocs(collection(db, "lostItems"));
-
-lostSnap.forEach(async(doc)=>{
-
- const lost = doc.data();
-
- if(
-  lost.itemName.toLowerCase() === itemName.value.toLowerCase() &&
-  lost.location.toLowerCase() === foundLocation.value.toLowerCase()
- ){
-
-   const confirmURL = 
-   `https://lostfoundwebapp.web.app/confirm.html?id=${doc.id}`;
-
-   emailjs.send("service_id","template_id",{
-     to_email: lost.email,
-     lost_item: lost.itemName,
-     lost_location: lost.location,
-     found_person: personName.value,
-     found_type: userType.value,
-     confirm_link: confirmURL
-   });
-
- }
-
-});
-
-alert("Found item submitted!");
-location.reload();
-
-});
+    alert("Found item submitted successfully!");
+    document.getElementById("foundForm").reset();
+  });
 
 </script>
 
 </body>
 </html>
+
+
 
 
 
