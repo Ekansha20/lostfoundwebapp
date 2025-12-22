@@ -111,20 +111,21 @@ foundForm.addEventListener("submit", async (e) => {
       `https://Ekansha20.github.io/lostfoundwebapp/confirm.html?lost=${doc.id}&found=${foundDoc.id}`;
 
       /* 3️⃣ Send email (NON-BLOCKING) */
-      try {
-        emailjs.send("service_id", "template_id", {
-          to_email: lost.email,
-          lost_item: lost.itemName,
-          lost_location: lost.location,
-          found_person: personName.value,
-          found_type: userType.value,
-          confirm_link: confirmURL
-        });
-      } catch (err) {
-        console.warn("Email failed, but match detected", err);
-      }
-    }
-  });
+      
+        emailjs.send("service_rx61zjm", "template_1ue28xr", {
+        to_email: lost.email,
+        lost_item: lost.itemName,
+        lost_location: lost.location,
+  found_person: personName.value,
+  found_type: userType.value,
+  confirm_link: confirmURL
+})
+.then(() => {
+  console.log("Email sent successfully");
+})
+.catch(err => {
+  console.error("Email failed:", err);
+});
 
   alert("Found item submitted successfully!");
   foundForm.reset();
@@ -133,6 +134,7 @@ foundForm.addEventListener("submit", async (e) => {
 
 </body>
 </html>
+
 
 
 
