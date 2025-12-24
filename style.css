@@ -25,31 +25,39 @@ body {
 }
 
 /* =====================
-   HEADER & NAVBAR
+   HEADER & NAVBAR (CENTERED & EVEN)
 ===================== */
-header {
+.main-header {
   background: rgba(0, 0, 0, 0.65);
-  padding: 18px 30px;
+  padding: 22px 20px 26px;
+  text-align: center;
 }
 
-header h1 {
-  font-size: 26px;
-  font-weight: 700;
+.main-header h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin-bottom: 14px;
   color: #f3efe6;
 }
 
-nav {
-  margin-top: 8px;
+/* 🔑 THIS IS WHAT CENTERS + SPACES THE NAV */
+.main-nav {
+  display: flex;
+  justify-content: center;   /* centers the whole nav */
+  align-items: center;
+  gap: 32px;                 /* equal spacing between links */
+  flex-wrap: wrap;
 }
 
-nav a {
+.main-nav a {
   color: #d8d2c4;
   text-decoration: none;
-  margin-right: 15px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
 }
 
-nav a:hover {
+.main-nav a:hover {
   color: #ffffff;
 }
 
@@ -57,16 +65,16 @@ nav a:hover {
    FORMS (LOST / FOUND)
 ===================== */
 form {
-  max-width: 500px;
-  margin: 60px auto;
+  max-width: 520px;
+  margin: 65px auto;
   background: rgba(0, 0, 0, 0.65);
-  padding: 25px 30px;
-  border-radius: 10px;
+  padding: 28px 32px;
+  border-radius: 12px;
 }
 
 form label {
   display: block;
-  margin-top: 15px;
+  margin-top: 16px;
   margin-bottom: 6px;
   font-weight: 600;
   color: #f3efe6;
@@ -76,7 +84,7 @@ form input,
 form select,
 form textarea {
   width: 100%;
-  padding: 10px;
+  padding: 11px;
   border-radius: 6px;
   border: none;
   outline: none;
@@ -85,17 +93,17 @@ form textarea {
 
 form textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
 }
 
 form button {
-  margin-top: 25px;
+  margin-top: 28px;
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background: #1f4f3a; /* forest green */
   color: #f3efe6;
   border: none;
-  border-radius: 25px;
+  border-radius: 28px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -112,7 +120,7 @@ form button:hover {
 ===================== */
 table {
   width: 95%;
-  margin: 30px auto;
+  margin: 35px auto;
   border-collapse: collapse;
   background: rgba(0, 0, 0, 0.65);
   color: #f3efe6;
@@ -120,13 +128,13 @@ table {
 
 table th,
 table td {
-  padding: 12px;
+  padding: 13px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
 }
 
 table th {
-  background: rgba(31, 79, 58, 0.85); /* forest green */
+  background: rgba(31, 79, 58, 0.85);
   font-weight: 700;
 }
 
@@ -144,9 +152,9 @@ table img {
 }
 
 .hero-line-main {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
   color: #f3efe6;
 }
 
@@ -164,10 +172,10 @@ table img {
    HOME PAGE BUTTONS
 ===================== */
 .hero-buttons {
-  margin-top: 40px;
+  margin-top: 45px;
   display: flex;
   justify-content: center;
-  gap: 28px;
+  gap: 30px;
   flex-wrap: wrap;
 }
 
@@ -175,7 +183,7 @@ table img {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 30px;
+  padding: 15px 32px;
   font-size: 16px;
   font-weight: 600;
   background: #1f4f3a;
@@ -192,6 +200,43 @@ table img {
 }
 
 .hero-btn .icon {
-  font-size: 19px;
+  font-size: 20px;
 }
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 600px) {
+  .main-header h1 {
+    font-size: 28px;
+  }
+
+  .main-nav {
+    gap: 18px;
+  }
+
+  .hero-line-main {
+    font-size: 26px;
+  }
+}
+/* =====================
+   ACTIVE NAV LINK
+===================== */
+.main-nav a.active {
+  color: #f3efe6; /* brighter beige */
+  position: relative;
+}
+
+.main-nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background-color: #1f4f3a; /* forest green underline */
+  border-radius: 2px;
+}
+
+
 
