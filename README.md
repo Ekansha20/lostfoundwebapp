@@ -108,13 +108,8 @@ Backend integration for Contact Us queries
 
 Admin dashboard for moderation
 
-Role-based access (student / guard / staff)
-
 AI-assisted matching for partial item details
 
-Campus-wide deployment support
-
-QR-based tagging for found items
 
 
 🤝 Team Notes
