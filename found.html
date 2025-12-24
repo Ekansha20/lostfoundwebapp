@@ -10,15 +10,22 @@
 <body>
 
 <header class="main-header">
-  <h1>FINDIT</h1>
-  <nav class="main-nav">
-    <a href="index.html">Home</a>
-    <a href="lost.html">Report Lost Item</a>
-    <a href="found.html" class="active">Report Found Item</a>
-    <a href="items.html">Browse Items</a>
-    <a href="contact.html">Contact Us</a>
+  <div class="header-inner">
 
-  </nav>
+    <div class="brand">
+      <span class="brand-icon">🧭</span>
+      <span class="brand-text">FINDIT</span>
+    </div>
+
+    <nav class="main-nav">
+      <a href="index.html" >Home</a>
+      <a href="lost.html">Report Lost Item</a>
+      <a href="found.html" class="active">Report Found Item</a>
+      <a href="items.html">Browse Items</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
+
+  </div>
 </header>
 
 <form id="foundForm">
@@ -143,6 +150,7 @@ foundForm.addEventListener("submit", async (e) => {
 
 </body>
 </html>
+
 
 
 
